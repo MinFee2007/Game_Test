@@ -3,6 +3,9 @@
 # Thư mục build / đầu ra
 
 # Tệp cấu hình chứa thông tin nhạy cảm
+.env
+.env.local
+*.log
 
 # Tệp rác của hệ điều hành và editor
 .vscode/
