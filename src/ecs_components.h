@@ -124,7 +124,8 @@ class ColliderComponent:public Component{
     ColliderComponent(float x,float y,float w,float h):colliderect({x,y,w,h}){}
 };
 class TransformComponent:public Component{
-
+    private:
+    float scale=1.0f;
 };
 class AnimationComponent;
 class InputComponent;

@@ -10,6 +10,7 @@
 #include "system_time.h"
 #include "system_event.h"
 #include "system_resource.h"
+#include "system_scene.h"
 
 class AllSystem{
     private:

@@ -8,16 +8,24 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_image.h>
 #include <SDL3/SDL_ttf.h>
+
 #include "isubsystem.h"
+#include "system_all.h"
 
 class ResourceSystem:public ISubSystem{
     private:
-    SDL_Renderer* renderer=nullptr;
-    std::unordered_map<std::string,SDL_Texture*> texturemap;
-    std::unordered_map<std::string,TTF_Font*> fontmap;
+    SDL_Renderer* renderer=nullptr; // Main render
+    std::unordered_map<std::string,SDL_Texture*> texturemap; // Map for textures
+    std::unordered_map<std::string,TTF_Font*> fontmap; // Map for fonts
     public:
-    void init() override {}
+    void init() override {
+        renderer=AllSystem::getInstance().getRenderer();
+        if (renderer==nullptr){
+            std::cout<<"Error: Resource system is unable to get renderer from all system's renderer\n";
+        }
+    }
     void setRenderer(SDL_Renderer* r){
+        // Set a new render
         this->renderer=r;
     }
     SDL_Texture* loadTexture(const std::string& filepath){
