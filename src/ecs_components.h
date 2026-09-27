@@ -16,12 +16,11 @@ class PlayerTag:public Component{};
 class EnemyTag:public Component{};
 
 class SpriteComponent:public Component{
-    private:
+    public:
     SDL_Texture* texture;
     SDL_FRect srcrect;
     SDL_FRect dstrect;
     float angle;
-    public:
     SpriteComponent(std::string filepath);
     SpriteComponent(
     std::string filepath,
@@ -39,20 +38,24 @@ class SpriteComponent:public Component{
         dstrect({x,y,w,h}){
         texture=AllSystem::getInstance().getSubSystem<ResourceSystem>()->loadTexture(filepath);
     }
+    ~SpriteComponent() override {
+        SDL_DestroyTexture(texture);
+    }
+    void setTexture(std::string filepath){
+        texture=AllSystem::getInstance().getSubSystem<ResourceSystem>()->loadTexture(filepath);
+    }
 };
 class PositionComponent:public Component{
-    private:
-    Vector2D position;
     public:
+    Vector2D position;
     PositionComponent():position(0.0f,0.0f){}
     PositionComponent(float x,float y):position(x,y){}
 };
 class VelocityComponent:public Component{
-    private:
+    public:
     Vector2D direction;
     float velocity;
     float acceleration;
-    public:
     VelocityComponent():direction(0.0f,0.0f),velocity(0.0f),acceleration(0.0f){}
     VelocityComponent(float xdir,float ydir):direction(ydir,xdir),velocity(0.0f),acceleration(0.0f){
         direction.normalize();
@@ -65,66 +68,74 @@ class VelocityComponent:public Component{
     }
 };
 class TextBoxComponent:public Component {
-private:
+    public:
     std::string text;
     TTF_Font* font;
     SDL_Color color;
     SDL_Texture* texture;
     SDL_FRect dstrect;
-    bool isDirty; // Cờ đánh dấu khi text bị thay đổi,cần vẽ lại texture
-
-public:
-    TextBoxComponent(std::string initial_text,std::string fontpath,SDL_Color color,float x,float y)
-        :text(initial_text),font(font),color(color),texture(nullptr),isDirty(true){
+    float width;
+    float padding;
+    bool isDirty; // Changing flag
+    TextBoxComponent(std::string initial_text,std::string fontpath,SDL_Color color,float x,float y,float w):
+        text(initial_text),
+        font(font),
+        color(color),
+        texture(nullptr),
+        isDirty(true),
+        width(w){
         font=AllSystem::getInstance().getSubSystem<ResourceSystem>()->loadFont(fontpath);
         dstrect.x=x;
         dstrect.y=y;
     }
-    void setText(const std::string& new_text) {
-        if (text!=new_text) {
-            text=new_text;
-            isDirty=true; // Yêu cầu render lại texture ở frame tiếp theo
-        }
-    }
-
-    void update() override {
-        // Nếu nội dung thay đổi, giải phóng texture cũ và tạo texture mới
-        if (isDirty&&font!=nullptr){
-            if (texture!=nullptr){
-                SDL_DestroyTexture(texture);
-            }
-            // Lấy Renderer từ AllSystem (Singleton)
-            SDL_Renderer* renderer=AllSystem::getInstance().getRenderer();
-            // Tạo Surface và Texture từ text
-            SDL_Surface* surface=TTF_RenderText_Solid(font,text.c_str(),text.length(),color);
-            if (surface){
-                texture=SDL_CreateTextureFromSurface(renderer,surface);
-                dstrect.w=surface->w;
-                dstrect.h=surface->h;
-                SDL_DestroySurface(surface);
-            }
-            isDirty=false;
-        }
-    }
-    
-    SDL_Texture* getTexture() const { return texture; }
-    SDL_FRect getDestRect() const { return dstrect; }
-
     ~TextBoxComponent() override {
-        if (texture) {
-            SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(texture);
+    }
+    void setFont(std::string fontpath){
+        font=AllSystem::getInstance().getSubSystem<ResourceSystem>()->loadFont(fontpath);
+        isDirty=true;
+    }
+    void setText(std::string newtext){
+        text=newtext;
+        isDirty=true;
+    }
+    void update() override {
+        if (!isDirty){
+            return;
         }
+        if (texture){
+            SDL_DestroyTexture(texture);
+            texture=nullptr;
+        }
+        if (text.empty()||!font){
+            isDirty=false;
+            return;
+        }
+        int wraplength=static_cast<int>(width-2*padding);
+        if (wraplength<=0){
+            wraplength=1;
+        }
+        SDL_Surface* surf=TTF_RenderText_Blended_Wrapped(font,text.c_str(),0,color,wraplength);
+        if (surf){
+            SDL_Renderer* renderer=AllSystem::getInstance().getRenderer();
+            if (renderer){
+                texture=SDL_CreateTextureFromSurface(renderer,surf);
+                dstrect.w=static_cast<float>(surf->w)+2*padding;
+                dstrect.h=static_cast<float>(surf->h)+2*padding;
+            }
+            SDL_DestroySurface(surf);
+        }
+        isDirty=false;
     }
 };
 class ColliderComponent:public Component{
-    private:
-    SDL_FRect colliderect;
     public:
+    SDL_FRect colliderect;
     ColliderComponent():colliderect({0,0,0,0}){}
     ColliderComponent(float x,float y,float w,float h):colliderect({x,y,w,h}){}
 };
 class TransformComponent:public Component{
-    private:
+    public:
     float scale=1.0f;
 };
 class AnimationComponent;

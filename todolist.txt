@@ -1,0 +1,2 @@
+- write ecs_components.cpp
+- main menu

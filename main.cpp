@@ -1,15 +1,13 @@
-#include <iostream>
-#include <SDL3/SDL.h>
-#include <SDL3/SDL_image.h>
-#include <SDL3/SDL_main.h>
 #include "src/system_all.h"
 
 int main(int argc, char* argv[]){
     AllSystem& allsystem=AllSystem::getInstance();
+    allsystem.addSubSystem<EntityComponentSystem>();
     allsystem.addSubSystem<EventSystem>();
     allsystem.addSubSystem<TimeSystem>();
     allsystem.addSubSystem<ResourceSystem>();
-    allsystem.addSubSystem<EntityComponentSystem>();
+    allsystem.addSubSystem<UISystem>();
+    allsystem.addSubSystem<SceneSystem>();
     allsystem.init();
     allsystem.run();
     allsystem.destruct();

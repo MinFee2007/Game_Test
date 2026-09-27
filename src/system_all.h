@@ -1,15 +1,25 @@
 #ifndef ALLSYSTEM_H
 #define ALLSYSTEM_H
 
+#include <iostream>
 #include <string>
+#include <vector>
 #include <iostream>
 #include <stdexcept>
+#include <memory>
+
 #include <SDL3/SDL.h>
+#include <SDL3/SDL_image.h>
+#include <SDL3/SDL_ttf.h>
+#include <SDL3/SDL_main.h>
+
+#include "isubsystem.h"
 
 #include "system_ecs.h"
-#include "system_time.h"
 #include "system_event.h"
+#include "system_time.h"
 #include "system_resource.h"
+#include "system_ui.h"
 #include "system_scene.h"
 
 class AllSystem{
@@ -80,7 +90,7 @@ class AllSystem{
             std::cout<<"Error: SDL_init failed: "<<SDL_GetError()<<"\n";
         }
         // Initialize SDL3 text & font
-        if (!TTF_Init()) {
+        if (!TTF_Init()){
             std::cout<<"TTF_Init Error: "<<SDL_GetError()<<"\n";
         }
 
@@ -97,6 +107,9 @@ class AllSystem{
         for (auto& subsystem:subsystems){
             subsystem->init();
         }
+
+        // Get renderer for resource system
+        this->getSubSystem<ResourceSystem>()->setRenderer(renderer);
 
         // Notify
         std::cout<<"All system is initialized successfully\n";

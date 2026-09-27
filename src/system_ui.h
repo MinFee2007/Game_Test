@@ -11,6 +11,8 @@ class UISystem:public ISubSystem{
     std::vector<Entity*> UInodes;
     std::vector<Entity*> GUInodes;
     public:
-    
+    void init() override {}
+    void update() override {}
+    void destruct() override {}
 };
 #endif

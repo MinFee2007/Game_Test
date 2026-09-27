@@ -4,15 +4,7 @@
 #include <memory>
 
 #include "isubsystem.h"
-#include "system_all.h"
-
-class IScene {
-public:
-    virtual void onEnter()=0;
-    virtual void onUpdate()=0;
-    virtual void onExit()=0;
-    virtual ~IScene()=default;
-};
+#include "iscene.h"
 
 class SceneSystem:public ISubSystem {
 private:
@@ -29,7 +21,6 @@ public:
         if (nextScene){
             if (currentScene){
                 currentScene->onExit();
-                AllSystem::getInstance().getSubSystem<EntityComponentSystem>()->destruct();
             }
             currentScene=std::move(nextScene);
             currentScene->onEnter();

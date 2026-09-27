@@ -10,23 +10,19 @@
 #include <SDL3/SDL_ttf.h>
 
 #include "isubsystem.h"
-#include "system_all.h"
 
 class ResourceSystem:public ISubSystem{
     private:
-    SDL_Renderer* renderer=nullptr; // Main render
+    SDL_Renderer* renderer;
     std::unordered_map<std::string,SDL_Texture*> texturemap; // Map for textures
     std::unordered_map<std::string,TTF_Font*> fontmap; // Map for fonts
     public:
-    void init() override {
-        renderer=AllSystem::getInstance().getRenderer();
-        if (renderer==nullptr){
-            std::cout<<"Error: Resource system is unable to get renderer from all system's renderer\n";
-        }
-    }
+    void init() override {}
     void setRenderer(SDL_Renderer* r){
-        // Set a new render
-        this->renderer=r;
+        renderer=r;
+        if (!renderer){
+            std::cout<<"Warning: Resource system's renderer is empty\n";
+        }
     }
     SDL_Texture* loadTexture(const std::string& filepath){
         auto it=texturemap.find(filepath);
@@ -58,6 +54,8 @@ class ResourceSystem:public ISubSystem{
             return it->second;
         }
         TTF_Font* font=TTF_OpenFont(filepath.c_str(),72.0f);
+        fontmap[filepath]=font;
+        return font;
     }
     void unloadFont(const std::string& filepath){
         auto it=fontmap.find(filepath);
@@ -65,9 +63,6 @@ class ResourceSystem:public ISubSystem{
             TTF_CloseFont(it->second);
             fontmap.erase(it);
         }
-    }
-    void renderTexture(SDL_Texture* texture,const SDL_FRect& srcrect,const SDL_FRect& dstrect){
-        SDL_RenderTexture(renderer,texture,&srcrect,&dstrect);
     }
     void destruct() override {
         for (auto& p:texturemap){

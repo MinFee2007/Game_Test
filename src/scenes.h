@@ -1,10 +1,26 @@
 #ifndef SCENES_H
 #define SCENES_h
 
-#include "system_scene.h"
+#include "iscene.h"
+
+#include "ecs_components.h"
 
 class SceneMainMenu:public IScene{
+    private:
+    std::vector<Entity*> entities;
+    public:
+    SceneMainMenu(){
 
+    }
+    void onEnter() override {
+
+    }
+    void onUpdate() override {
+
+    }
+    void onExit() override {
+
+    }
 };
 
 #endif
