@@ -2,7 +2,7 @@
 #define SCENES_h
 
 #include "iscene.h"
-
+#include "system_ecs.h"
 #include "ecs_components.h"
 
 class SceneMainMenu:public IScene{

@@ -62,6 +62,9 @@ void EntityComponentSystem::refresh(){
 void EntityComponentSystem::addToGroup(Entity* mEntity,Group mGroup){
     groupedentities[mGroup].emplace_back(mEntity);
 }
+void EntityComponentSystem::clearGroup(Group mGroup){
+    groupedentities[mGroup].clear();
+}
 std::vector<Entity*>& EntityComponentSystem::getGroup(Group mGroup){
     return groupedentities[mGroup];
 }

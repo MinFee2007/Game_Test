@@ -100,6 +100,7 @@ class EntityComponentSystem:public ISubSystem{
     void print();
     void refresh();
     void addToGroup(Entity* mEntity, Group mGroup);
+    void clearGroup(Group mGroup);
     std::vector<Entity*>& getGroup(Group mGroup);
     Entity& addEntity();
     void destruct() override;
