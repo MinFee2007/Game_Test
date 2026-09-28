@@ -24,6 +24,7 @@ class AllSystem{
     int screenwidth=1152;
     int screenheight=648;
     int target_fps=60;
+    std::string state="menu_main";
     SDL_Window* window=nullptr; // SDL window
     SDL_Renderer* renderer=nullptr; // SDL renderer
     std::vector<std::unique_ptr<ISubSystem>> subsystems; // Subsystems

@@ -59,3 +59,4 @@ void ResourceSystem::destruct(){
     }
     texturemap.clear();
 }
+void ResourceSystem::update(){}

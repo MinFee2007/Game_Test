@@ -26,6 +26,6 @@ class ResourceSystem:public ISubSystem{
     TTF_Font* loadFont(const std::string& filepath);
     void unloadFont(const std::string& filepath);
     void destruct() override;
-    void update() override {}
+    void update() override;
 };
 #endif

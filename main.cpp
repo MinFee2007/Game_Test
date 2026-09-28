@@ -5,6 +5,7 @@
 #include "src/system_resource.h"
 #include "src/system_ui.h"
 #include "src/system_scene.h"
+#include "src/system_manager.h"
 #include <SDL3/SDL_main.h>
 
 int main(int argc, char* argv[]){
@@ -15,6 +16,7 @@ int main(int argc, char* argv[]){
     allsystem.addSubSystem<ResourceSystem>();
     allsystem.addSubSystem<UISystem>();
     allsystem.addSubSystem<SceneSystem>();
+    allsystem.addSubSystem<ManagerSystem>();
     allsystem.init();
     allsystem.run();
     allsystem.destruct();
