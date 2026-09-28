@@ -1,2 +1,2 @@
-- write ecs_components.cpp
+- write .cpp files for subsystems
 - main menu

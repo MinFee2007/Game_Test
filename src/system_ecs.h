@@ -7,7 +7,7 @@
 #include <array>
 #include <algorithm>
 
-#include "isubsystem.h"
+#include "i_subsystem.h"
 
 //pre-init
 class Entity;

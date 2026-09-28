@@ -1,4 +1,11 @@
 #include "src/system_all.h"
+#include "src/system_ecs.h"
+#include "src/system_event.h"
+#include "src/system_time.h"
+#include "src/system_resource.h"
+#include "src/system_ui.h"
+#include "src/system_scene.h"
+#include <SDL3/SDL_main.h>
 
 int main(int argc, char* argv[]){
     AllSystem& allsystem=AllSystem::getInstance();

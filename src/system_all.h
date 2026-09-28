@@ -8,19 +8,13 @@
 #include <stdexcept>
 #include <memory>
 
+#include <Vector2D.h>
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_image.h>
 #include <SDL3/SDL_ttf.h>
-#include <SDL3/SDL_main.h>
 
-#include "isubsystem.h"
-
-#include "system_ecs.h"
-#include "system_event.h"
-#include "system_time.h"
-#include "system_resource.h"
-#include "system_ui.h"
-#include "system_scene.h"
+#include "i_subsystem.h"
+#include "i_scene.h"
 
 class AllSystem{
     private:
@@ -108,9 +102,6 @@ class AllSystem{
             subsystem->init();
         }
 
-        // Get renderer for resource system
-        this->getSubSystem<ResourceSystem>()->setRenderer(renderer);
-
         // Notify
         std::cout<<"All system is initialized successfully\n";
     }
@@ -119,12 +110,6 @@ class AllSystem{
         // Update the game loop
         for (auto& subsystem:subsystems) {
             subsystem->update();
-        }
-        //check for quit event
-        EventSystem* es=getSubSystem<EventSystem>();
-        if (es&&es->isQuit()){
-            quit();
-            return;
         }
     }
 

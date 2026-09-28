@@ -1,12 +1,13 @@
 #ifndef SCENES_H
 #define SCENES_h
 
-#include "iscene.h"
+#include "i_scene.h"
 #include "system_ecs.h"
-#include "ecs_components.h"
+#include "o_ecs_components.h"
 
 class SceneMainMenu:public IScene{
     private:
+    std::string state;
     std::vector<Entity*> entities;
     public:
     SceneMainMenu(){

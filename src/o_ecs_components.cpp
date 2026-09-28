@@ -1,4 +1,4 @@
-#include "ecs_components.h"
+#include "o_ecs_components.h"
 SpriteComponent::SpriteComponent(std::string filepath){
     texture=AllSystem::getInstance().getSubSystem<ResourceSystem>()->loadTexture(filepath);
 }

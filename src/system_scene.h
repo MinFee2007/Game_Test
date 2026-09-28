@@ -3,8 +3,8 @@
 
 #include <memory>
 
-#include "isubsystem.h"
-#include "iscene.h"
+#include "i_subsystem.h"
+#include "i_scene.h"
 
 class SceneSystem:public ISubSystem {
 private:

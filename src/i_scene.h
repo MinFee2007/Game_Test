@@ -1,6 +1,6 @@
 #ifndef ISCENE_H
 #define ISCENE_H
-
+// Scene interface
 class IScene {
     public:
     virtual void onEnter()=0;

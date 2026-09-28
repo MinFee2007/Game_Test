@@ -5,11 +5,14 @@
 #include <vector>
 #include <stdexcept>
 #include <iostream>
+
 #include <Vector2D.h>
 #include <SDL3/SDL.h>
+#include <SDL3/SDL_image.h>
 #include <SDL3/SDL_ttf.h>
 
 #include "system_all.h"
+#include "system_resource.h"
 #include "system_ecs.h"
 
 class PlayerTag:public Component{};
