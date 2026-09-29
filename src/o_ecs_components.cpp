@@ -19,7 +19,7 @@ void SpriteComponent::setTexture(std::string filepath){
 PositionComponent::PositionComponent():position(0.0f,0.0f){}
 PositionComponent::PositionComponent(float x,float y):position(x,y){}
 VelocityComponent::VelocityComponent():direction(0.0f,0.0f),velocity(0.0f),acceleration(0.0f){}
-VelocityComponent::VelocityComponent(float xdir,float ydir):direction(ydir,xdir),velocity(0.0f),acceleration(0.0f){
+VelocityComponent::VelocityComponent(float xdir,float ydir):direction(xdir,ydir),velocity(0.0f),acceleration(0.0f){
     direction.normalize();
 }
 VelocityComponent::VelocityComponent(float xdir,float ydir,float spd):direction(xdir,ydir),velocity(spd),acceleration(0.0f){
@@ -28,23 +28,25 @@ VelocityComponent::VelocityComponent(float xdir,float ydir,float spd):direction(
 VelocityComponent::VelocityComponent(float xdir,float ydir,float spd,float a):direction(xdir,ydir),velocity(spd),acceleration(a){
     direction.normalize();
 }
-TextBoxComponent::TextBoxComponent(std::string initial_text,std::string fontpath,SDL_Color color,float x,float y,float w):
+TextBoxComponent::TextBoxComponent(std::string initial_text,std::string fontpath,SDL_Color color,float size,float x,float y,float w,float p):
     text(initial_text),
-    font(font),
+    font(nullptr),
     color(color),
     texture(nullptr),
     isDirty(true),
-    width(w)
+    fontsize(size),
+    width(w),
+    padding(p)
 {
-    font=AllSystem::getInstance().getSubSystem<ResourceSystem>()->loadFont(fontpath);
+    font=AllSystem::getInstance().getSubSystem<ResourceSystem>()->loadFont(fontpath,size);
     dstrect.x=x;
     dstrect.y=y;
 }
 TextBoxComponent::~TextBoxComponent(){
     SDL_DestroyTexture(texture);
 }
-void TextBoxComponent::setFont(std::string fontpath){
-    font=AllSystem::getInstance().getSubSystem<ResourceSystem>()->loadFont(fontpath);
+void TextBoxComponent::setFont(std::string fontpath,float size){
+    font=AllSystem::getInstance().getSubSystem<ResourceSystem>()->loadFont(fontpath,size);
     isDirty=true;
 }
 void TextBoxComponent::setText(std::string newtext){
@@ -78,6 +80,9 @@ void TextBoxComponent::update(){
         SDL_DestroySurface(surf);
     }
     isDirty=false;
+}
+void TextBoxComponent::print(){
+    SDL_RenderTexture(AllSystem::getInstance().getRenderer(),texture,NULL,&dstrect);
 }
 ColliderComponent::ColliderComponent():colliderect({0,0,0,0}){}
 ColliderComponent::ColliderComponent(float x,float y,float w,float h):colliderect({x,y,w,h}){}

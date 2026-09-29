@@ -25,6 +25,7 @@ class AllSystem{
     int screenheight=648;
     int target_fps=60;
     std::string state="menu_main";
+    bool isChange=true;
     SDL_Window* window=nullptr; // SDL window
     SDL_Renderer* renderer=nullptr; // SDL renderer
     std::vector<std::unique_ptr<ISubSystem>> subsystems; // Subsystems
@@ -43,13 +44,15 @@ class AllSystem{
     // Getters
     int getScreenWidth() const {return screenwidth;}
     int getScreenHeight() const {return screenheight;}
+    std::string getState() const {return state;}
     SDL_Renderer* getRenderer() const {return renderer;}
 
     // Methods
     template<typename T,typename...TArgs> void addSubSystem(TArgs&&... args){
         // Add a subsystem
-        T* subsystem=new T(std::forward<TArgs>(args)...);
-        subsystems.emplace_back(std::unique_ptr<ISubSystem>(subsystem));
+        // T* subsystem=new T(std::forward<TArgs>(args)...);
+        // subsystem.emplace_back(std::unique_ptr<ISubSystem>(subsystem));
+        subsystems.emplace_back(std::make_unique<T>(std::forward<TArgs>(args)...));
     }
     template<typename T> T* getSubSystem(){
         // Get a subsystem
@@ -118,9 +121,9 @@ class AllSystem{
         // Render the scene in game loop
         SDL_SetRenderDrawColor(renderer,0,0,0,255);
         SDL_RenderClear(renderer);
-        //
-
-        //
+        for (auto& subsystem:subsystems){
+            subsystem->print();
+        }
         SDL_RenderPresent(renderer);
     }
 
@@ -140,6 +143,7 @@ class AllSystem{
         SDL_DestroyWindow(window);
         SDL_DestroyRenderer(renderer);
         SDL_Quit();
+        running=false;
     }
 };
 #endif

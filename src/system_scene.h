@@ -20,19 +20,27 @@ public:
     void update() override {
         if (nextScene){
             if (currentScene){
-                currentScene->onExit();
+                currentScene->exit();
             }
             currentScene=std::move(nextScene);
-            currentScene->onEnter();
+            currentScene->enter();
+            std::cout<<"A new scene has been loaded\n";
         }
 
         if (currentScene){
-            currentScene->onUpdate();
+            currentScene->update();
         }
     }
-
+    void print() override {
+        if (currentScene){
+            currentScene->print();
+        }
+    }
     void destruct() override {
-        if (currentScene) currentScene->onExit();
+        if (currentScene){
+            currentScene->exit();
+        }
+        std::cout<<"Scene system is destructed\n";
     }
 };
 #endif

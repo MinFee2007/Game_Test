@@ -13,6 +13,7 @@
 
 #include "system_all.h"
 #include "system_resource.h"
+#include "system_event.h"
 #include "system_ecs.h"
 
 class PlayerTag:public Component{};
@@ -53,14 +54,16 @@ class TextBoxComponent:public Component {
     SDL_Color color;
     SDL_Texture* texture;
     SDL_FRect dstrect;
+    float fontsize;
     float width;
     float padding;
     bool isDirty; // Changing flag
-    TextBoxComponent(std::string initial_text,std::string fontpath,SDL_Color color,float x,float y,float w);
+    TextBoxComponent(std::string initial_text,std::string fontpath,SDL_Color color,float size,float x,float y,float w,float p);
     ~TextBoxComponent() override;
-    void setFont(std::string fontpath);
+    void setFont(std::string fontpath,float size);
     void setText(std::string newtext);
-    void update();
+    void update() override;
+    void print() override;
 };
 class ColliderComponent:public Component{
     public:

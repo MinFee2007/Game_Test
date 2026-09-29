@@ -23,8 +23,8 @@ class ResourceSystem:public ISubSystem{
     void setRenderer(SDL_Renderer* r);
     SDL_Texture* loadTexture(const std::string& filepath);
     void unloadTexture(const std::string& filepath);
-    TTF_Font* loadFont(const std::string& filepath);
-    void unloadFont(const std::string& filepath);
+    TTF_Font* loadFont(const std::string& filepath,float ptsize);
+    void unloadFont(const std::string& filepath,float ptsize);
     void destruct() override;
     void update() override;
 };

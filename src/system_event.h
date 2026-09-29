@@ -64,6 +64,8 @@ class EventSystem:public ISubSystem{
             }
         }
     }
-    void destruct() override {}
+    void destruct() override {
+        std::cout<<"Event system is destructed\n";
+    }
 };
 #endif

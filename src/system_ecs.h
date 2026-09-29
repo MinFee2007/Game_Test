@@ -50,6 +50,7 @@ class Component{
     virtual void update(){};
     virtual void print(){};
     virtual ~Component()=default;
+    friend class Entity;
 };
 
 //class Entity

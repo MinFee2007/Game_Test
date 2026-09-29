@@ -21,7 +21,7 @@ class TimeSystem:public ISubSystem{
         lastTime=currentTime; // Update last time to current time for next frame
     }
     void destruct() override {
-        
+        std::cout<<"Time system is destructed\n";
     }
     // Getters
     float getDeltaTime() const {

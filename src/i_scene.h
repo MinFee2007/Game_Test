@@ -3,9 +3,10 @@
 // Scene interface
 class IScene {
     public:
-    virtual void onEnter()=0;
-    virtual void onUpdate()=0;
-    virtual void onExit()=0;
+    virtual void enter()=0;
+    virtual void update()=0;
+    virtual void print()=0;
+    virtual void exit()=0;
     virtual ~IScene()=default;
 };
 

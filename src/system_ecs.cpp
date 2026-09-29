@@ -1,5 +1,5 @@
 #include "system_ecs.h"
-Entity::Entity(EntityComponentSystem& mManager):manager(mManager){}
+Entity::Entity(EntityComponentSystem& mManager):manager(mManager),componentarray({}){}
 void Entity::update(){
     for (auto& c:components){
         c->update();

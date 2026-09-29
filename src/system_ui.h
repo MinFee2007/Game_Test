@@ -8,11 +8,12 @@
 
 class UISystem:public ISubSystem{
     private:
-    std::vector<Entity*> UInodes;
     std::vector<Entity*> GUInodes;
     public:
     void init() override {}
     void update() override {}
-    void destruct() override {}
+    void destruct() override {
+        std::cout<<"UI system is destructed\n";
+    }
 };
 #endif

@@ -13,11 +13,16 @@
 #include "system_ui.h"
 #include "system_scene.h"
 
+#include "o_scenes.h"
+
 class ManagerSystem:public ISubSystem{
     private:
-    std::vector<ISubSystem*> subsystems;
+    bool isChange;
     public:
     ManagerSystem();
+    bool getChange() const;
+    void toggleChange();
+    void setChange(bool change);
     void init() override;
     void update() override;
     void destruct() override;

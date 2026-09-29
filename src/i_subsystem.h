@@ -5,6 +5,7 @@ class ISubSystem{
     public:
     virtual void init()=0;
     virtual void update()=0;
+    virtual void print(){}
     virtual void destruct()=0;
     virtual ~ISubSystem()=default;
 };
