@@ -30,6 +30,7 @@ class SpriteComponent:public Component{
     SpriteComponent(std::string filepath,float xcut,float ycut,float wcut,float hcut,float x,float y,float w,float h,float turn_angle);
     ~SpriteComponent() override;
     void setTexture(std::string filepath);
+    void print() override;
 };
 class PositionComponent:public Component{
     public:
@@ -74,6 +75,19 @@ class ColliderComponent:public Component{
 class TransformComponent:public Component{
     public:
     float scale=1.0f;
+    TransformComponent::TransformComponent(float sc);
+};
+class ButtonComponent:public Component{
+    public:
+    SDL_FRect dstrect;
+    SDL_Texture* texture1;
+    SDL_Texture* texture2;
+    SDL_Texture* texture;
+    bool active1;
+    bool active2;
+    ButtonComponent::ButtonComponent(std::string filepath1,std::string filepath2,float x,float y,float w,float h);
+    void update() override;
+    void print() override;
 };
 class AnimationComponent;
 class InputComponent;

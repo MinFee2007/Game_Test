@@ -1,6 +1,9 @@
 #include "o_ecs_components.h"
 SpriteComponent::SpriteComponent(std::string filepath){
-    texture=AllSystem::getInstance().getSubSystem<ResourceSystem>()->loadTexture(filepath);
+    ResourceSystem* rs=AllSystem::getInstance().getSubSystem<ResourceSystem>();
+    if (rs){
+        texture=rs->loadTexture(filepath);
+    }
 }
 SpriteComponent::SpriteComponent(std::string filepath,float xcut,float ycut,float w,float h,float turn_angle):
     srcrect({xcut,ycut,w,h}),dstrect({0,0,w,h}){
@@ -8,13 +11,25 @@ SpriteComponent::SpriteComponent(std::string filepath,float xcut,float ycut,floa
     }
 SpriteComponent::SpriteComponent(std::string filepath,float xcut,float ycut,float wcut,float hcut,float x,float y,float w,float h,float turn_angle):
     srcrect({xcut,ycut,wcut,hcut}),dstrect({x,y,w,h}){
-    texture=AllSystem::getInstance().getSubSystem<ResourceSystem>()->loadTexture(filepath);
+    ResourceSystem* rs=AllSystem::getInstance().getSubSystem<ResourceSystem>();
+    if (rs){
+        texture=rs->loadTexture(filepath);
     }
+}
 SpriteComponent::~SpriteComponent(){
     SDL_DestroyTexture(texture);
 }
 void SpriteComponent::setTexture(std::string filepath){
-    texture=AllSystem::getInstance().getSubSystem<ResourceSystem>()->loadTexture(filepath);
+    ResourceSystem* rs=AllSystem::getInstance().getSubSystem<ResourceSystem>();
+    if (rs){
+        texture=rs->loadTexture(filepath);
+    }
+}
+void SpriteComponent::print(){
+    SDL_Renderer* r=AllSystem::getInstance().getRenderer();
+    if (r){
+        SDL_RenderTexture(r,texture,&srcrect,&dstrect);
+    }
 }
 PositionComponent::PositionComponent():position(0.0f,0.0f){}
 PositionComponent::PositionComponent(float x,float y):position(x,y){}
@@ -38,6 +53,7 @@ TextBoxComponent::TextBoxComponent(std::string initial_text,std::string fontpath
     width(w),
     padding(p)
 {
+
     font=AllSystem::getInstance().getSubSystem<ResourceSystem>()->loadFont(fontpath,size);
     dstrect.x=x;
     dstrect.y=y;
@@ -46,8 +62,11 @@ TextBoxComponent::~TextBoxComponent(){
     SDL_DestroyTexture(texture);
 }
 void TextBoxComponent::setFont(std::string fontpath,float size){
-    font=AllSystem::getInstance().getSubSystem<ResourceSystem>()->loadFont(fontpath,size);
-    isDirty=true;
+    ResourceSystem* rs=AllSystem::getInstance().getSubSystem<ResourceSystem>();
+    if (rs){
+        font=rs->loadFont(fontpath,size);
+        isDirty=true;
+    }
 }
 void TextBoxComponent::setText(std::string newtext){
     text=newtext;
@@ -82,7 +101,59 @@ void TextBoxComponent::update(){
     isDirty=false;
 }
 void TextBoxComponent::print(){
-    SDL_RenderTexture(AllSystem::getInstance().getRenderer(),texture,NULL,&dstrect);
+    SDL_Renderer* r=AllSystem::getInstance().getRenderer();
+    if (!r){
+        return;
+    }
+    SDL_RenderTexture(r,texture,NULL,&dstrect);
 }
 ColliderComponent::ColliderComponent():colliderect({0,0,0,0}){}
 ColliderComponent::ColliderComponent(float x,float y,float w,float h):colliderect({x,y,w,h}){}
+TransformComponent::TransformComponent(float sc):scale(sc){
+    
+}
+ButtonComponent::ButtonComponent(std::string filepath1,std::string filepath2,float x,float y,float w,float h):dstrect({x,y,w,h}),active1(false),active2(false){
+    ResourceSystem* rs=AllSystem::getInstance().getSubSystem<ResourceSystem>();
+    if (rs){
+        texture1=rs->loadTexture(filepath1);
+        texture2=rs->loadTexture(filepath2);
+        texture=texture1;
+    }
+}
+void ButtonComponent::update(){
+    EventSystem* es=AllSystem::getInstance().getSubSystem<EventSystem>();
+    if (!es){
+        return;
+    }
+    SDL_Event e=es->getEvent();
+    if (active1==false&&e.type==SDL_EVENT_MOUSE_BUTTON_DOWN){
+        if (e.button.button==SDL_BUTTON_LEFT){
+            if (e.button.clicks==1){
+                float x=e.button.x;
+                float y=e.button.y;
+                if ((x>=dstrect.x&&x<=dstrect.x+dstrect.w)&&(y>=dstrect.y&&y<=dstrect.y+dstrect.h)){
+                    active1=true;
+                    texture=texture2;
+                }
+                else {
+                    active1=false;
+                }
+            }
+        }
+    }
+    else if (active1==true&&e.type==SDL_EVENT_MOUSE_BUTTON_UP){
+        if (e.button.button==SDL_BUTTON_LEFT){
+            if (e.button.clicks==1){
+                active2=true;
+                active1=false;
+                texture=texture1;
+            }
+        }
+    }
+}
+void ButtonComponent::print(){
+    SDL_Renderer* r=AllSystem::getInstance().getRenderer();
+    if (r){
+        SDL_RenderTexture(r,texture,NULL,&dstrect);
+    }
+}
