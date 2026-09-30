@@ -112,46 +112,49 @@ ColliderComponent::ColliderComponent(float x,float y,float w,float h):colliderec
 TransformComponent::TransformComponent(float sc):scale(sc){
     
 }
-ButtonComponent::ButtonComponent(std::string filepath1,std::string filepath2,float x,float y,float w,float h):dstrect({x,y,w,h}),active1(false),active2(false){
+ButtonType1Component::ButtonType1Component(std::string filepath1,std::string filepath2,float x,float y,float w,float h):dstrect({x,y,w,h}),pre_active(false),active(false){
     ResourceSystem* rs=AllSystem::getInstance().getSubSystem<ResourceSystem>();
     if (rs){
         texture1=rs->loadTexture(filepath1);
-        texture2=rs->loadTexture(filepath2);
+        if (filepath2!="NULL"){
+            texture2=rs->loadTexture(filepath2);
+        }
+        else {
+            texture2=texture1;
+        }
+        if ((!texture2)||(!texture1)){
+            std::cout<<"Warning: Couldn't load textures for button component\n";
+        }
         texture=texture1;
     }
 }
-void ButtonComponent::update(){
+void ButtonType1Component::update(){
     EventSystem* es=AllSystem::getInstance().getSubSystem<EventSystem>();
     if (!es){
+        std::cout<<"Warning: can't find event system\n";
         return;
     }
-    SDL_Event e=es->getEvent();
-    if (active1==false&&e.type==SDL_EVENT_MOUSE_BUTTON_DOWN){
-        if (e.button.button==SDL_BUTTON_LEFT){
-            if (e.button.clicks==1){
-                float x=e.button.x;
-                float y=e.button.y;
-                if ((x>=dstrect.x&&x<=dstrect.x+dstrect.w)&&(y>=dstrect.y&&y<=dstrect.y+dstrect.h)){
-                    active1=true;
-                    texture=texture2;
-                }
-                else {
-                    active1=false;
-                }
+    for (SDL_Event e:es->getEvent()){
+        if (pre_active==false&&e.type==SDL_EVENT_MOUSE_BUTTON_DOWN&&e.button.button==SDL_BUTTON_LEFT){
+            float x=e.button.x;
+            float y=e.button.y;
+            if ((x>=dstrect.x&&x<=dstrect.x+dstrect.w)&&(y>=dstrect.y&&y<=dstrect.y+dstrect.h)){
+                pre_active=true;
+                texture=texture2;
             }
+            else {
+                pre_active=false;
+            }
+            
         }
-    }
-    else if (active1==true&&e.type==SDL_EVENT_MOUSE_BUTTON_UP){
-        if (e.button.button==SDL_BUTTON_LEFT){
-            if (e.button.clicks==1){
-                active2=true;
-                active1=false;
-                texture=texture1;
-            }
+        else if (pre_active==true&&e.type==SDL_EVENT_MOUSE_BUTTON_UP&&e.button.button==SDL_BUTTON_LEFT){
+            active=true;
+            pre_active=false;
+            texture=texture1;
         }
     }
 }
-void ButtonComponent::print(){
+void ButtonType1Component::print(){
     SDL_Renderer* r=AllSystem::getInstance().getRenderer();
     if (r){
         SDL_RenderTexture(r,texture,NULL,&dstrect);

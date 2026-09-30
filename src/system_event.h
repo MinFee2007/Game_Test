@@ -9,7 +9,7 @@
 class EventSystem:public ISubSystem{
     private:
     // Attributes
-    SDL_Event event; // SDL_Event
+    std::vector<SDL_Event> frameEvents; // Events in a frame
     bool quitRequested=false; // Quit event flag
 
     const bool* currentKeyStates=nullptr; // Pointer to the current key state array
@@ -18,8 +18,8 @@ class EventSystem:public ISubSystem{
     
     public:
     //Getters
-    SDL_Event& getEvent(){
-        return event;
+    const std::vector<SDL_Event>& getEvent() const {
+        return frameEvents;
     }
     bool isQuit() const {
         return quitRequested;
@@ -58,7 +58,10 @@ class EventSystem:public ISubSystem{
             lastKeyStates[i]=currentKeyStates[i];
         }
         // Polling events
-        while (SDL_PollEvent(&event)) {
+        frameEvents.clear();
+        SDL_Event event;
+        while (SDL_PollEvent(&event)){
+            frameEvents.push_back(event);
             if (event.type==SDL_EVENT_QUIT) {
                 quitRequested=true;
             }

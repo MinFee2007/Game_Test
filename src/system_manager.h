@@ -10,7 +10,7 @@
 #include "system_event.h"
 #include "system_time.h"
 #include "system_resource.h"
-#include "system_ui.h"
+#include "system_gui.h"
 #include "system_scene.h"
 
 #include "o_scenes.h"

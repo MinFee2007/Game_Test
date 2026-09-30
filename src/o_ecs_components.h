@@ -75,17 +75,17 @@ class ColliderComponent:public Component{
 class TransformComponent:public Component{
     public:
     float scale=1.0f;
-    TransformComponent::TransformComponent(float sc);
+    TransformComponent(float sc);
 };
-class ButtonComponent:public Component{
+class ButtonType1Component:public Component{
     public:
     SDL_FRect dstrect;
     SDL_Texture* texture1;
     SDL_Texture* texture2;
     SDL_Texture* texture;
-    bool active1;
-    bool active2;
-    ButtonComponent::ButtonComponent(std::string filepath1,std::string filepath2,float x,float y,float w,float h);
+    bool pre_active;
+    bool active;
+    ButtonType1Component(std::string filepath1,std::string filepath2,float x,float y,float w,float h);
     void update() override;
     void print() override;
 };

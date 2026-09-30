@@ -9,5 +9,6 @@
 
 # Tệp rác của hệ điều hành và editor
 .vscode/
+.assets/
 
 todolist.txt
