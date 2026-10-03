@@ -4,6 +4,7 @@
 #include <bitset>
 #include <memory>
 #include <vector>
+#include <string>
 #include <array>
 #include <algorithm>
 
@@ -56,6 +57,7 @@ class Component{
 //class Entity
 class Entity{
     private:
+    std::string name="";
     EntityComponentSystem& manager;
     bool active=true;
     std::vector<std::unique_ptr<Component>> components;

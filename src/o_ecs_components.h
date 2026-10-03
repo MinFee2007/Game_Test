@@ -12,8 +12,8 @@
 #include <SDL3/SDL_ttf.h>
 
 #include "system_all.h"
-#include "system_resource.h"
 #include "system_event.h"
+#include "system_resource.h"
 #include "system_ecs.h"
 
 class PlayerTag:public Component{};
@@ -24,12 +24,21 @@ class SpriteComponent:public Component{
     SDL_Texture* texture;
     SDL_FRect srcrect;
     SDL_FRect dstrect;
-    float angle;
+    bool hassrcrect;
+    bool hasdstrect;
+    float angle=0;
+    Uint8 transparency=255;
     SpriteComponent(std::string filepath);
-    SpriteComponent(std::string filepath,float xcut,float ycut,float w,float h,float turn_angle);
-    SpriteComponent(std::string filepath,float xcut,float ycut,float wcut,float hcut,float x,float y,float w,float h,float turn_angle);
+    SpriteComponent(std::string filepath,SDL_FRect rect);
+    SpriteComponent(std::string filepath,SDL_FRect rect,float turn_angle);
+    SpriteComponent(std::string filepath,SDL_FRect rect,float turn_angle,Uint8 trs);
+    SpriteComponent(std::string filepath,SDL_FRect cutrect,SDL_FRect rect,float turn_angle,Uint8 trs);
     ~SpriteComponent() override;
-    void setTexture(std::string filepath);
+    SpriteComponent& setTexture(std::string filepath);
+    SpriteComponent& setSrcRect(SDL_FRect rect);
+    SpriteComponent& setDstRect(SDL_FRect rect);
+    SpriteComponent& setAngle(float a);
+    SpriteComponent& setTransparency(Uint8 trs);
     void print() override;
 };
 class PositionComponent:public Component{
@@ -70,7 +79,7 @@ class ColliderComponent:public Component{
     public:
     SDL_FRect colliderect;
     ColliderComponent();
-    ColliderComponent(float x,float y,float w,float h);
+    ColliderComponent(SDL_FRect rect);
 };
 class TransformComponent:public Component{
     public:
@@ -85,11 +94,16 @@ class ButtonType1Component:public Component{
     SDL_Texture* texture;
     bool pre_active;
     bool active;
-    ButtonType1Component(std::string filepath1,std::string filepath2,float x,float y,float w,float h);
+    ButtonType1Component(std::string filepath1,std::string filepath2,SDL_FRect rect);
     void update() override;
     void print() override;
 };
-class AnimationComponent;
+class MotionComponent:public Component{
+    public:
+    bool finished=false;
+    SDL_FRect startrect;
+    SDL_FRect endrect;
+};
 class InputComponent;
 class HealthComponent;
 class AIBrainComponent;

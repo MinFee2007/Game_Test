@@ -5,10 +5,12 @@
 # Tệp cấu hình chứa thông tin nhạy cảm
 .env
 .env.local
+*.exe
 *.log
 
 # Tệp rác của hệ điều hành và editor
 .vscode/
-.assets/
 
+# Khác
+.assets/
 todolist.txt

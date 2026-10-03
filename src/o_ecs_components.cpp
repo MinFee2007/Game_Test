@@ -1,16 +1,33 @@
 #include "o_ecs_components.h"
-SpriteComponent::SpriteComponent(std::string filepath){
+SpriteComponent::SpriteComponent(std::string filepath):hassrcrect(false),hasdstrect(false){
     ResourceSystem* rs=AllSystem::getInstance().getSubSystem<ResourceSystem>();
     if (rs){
         texture=rs->loadTexture(filepath);
     }
 }
-SpriteComponent::SpriteComponent(std::string filepath,float xcut,float ycut,float w,float h,float turn_angle):
-    srcrect({xcut,ycut,w,h}),dstrect({0,0,w,h}){
-    texture=AllSystem::getInstance().getSubSystem<ResourceSystem>()->loadTexture(filepath);
+SpriteComponent::SpriteComponent(std::string filepath,SDL_FRect rect):
+    dstrect(rect),hassrcrect(false),hasdstrect(true){
+    ResourceSystem* rs=AllSystem::getInstance().getSubSystem<ResourceSystem>();
+    if (rs){
+        texture=rs->loadTexture(filepath);
     }
-SpriteComponent::SpriteComponent(std::string filepath,float xcut,float ycut,float wcut,float hcut,float x,float y,float w,float h,float turn_angle):
-    srcrect({xcut,ycut,wcut,hcut}),dstrect({x,y,w,h}){
+}
+SpriteComponent::SpriteComponent(std::string filepath,SDL_FRect rect,float turn_angle):
+    dstrect(rect),hassrcrect(false),hasdstrect(true),angle(turn_angle){
+    ResourceSystem* rs=AllSystem::getInstance().getSubSystem<ResourceSystem>();
+    if (rs){
+        texture=rs->loadTexture(filepath);
+    }
+}
+SpriteComponent::SpriteComponent(std::string filepath,SDL_FRect rect,float turn_angle,Uint8 trs):
+    dstrect(rect),hassrcrect(false),hasdstrect(true),angle(turn_angle),transparency(trs){
+    ResourceSystem* rs=AllSystem::getInstance().getSubSystem<ResourceSystem>();
+    if (rs){
+        texture=rs->loadTexture(filepath);
+    }
+}
+SpriteComponent::SpriteComponent(std::string filepath,SDL_FRect cutrect,SDL_FRect rect,float turn_angle,Uint8 trs):
+    srcrect(cutrect),dstrect(rect),hassrcrect(true),hasdstrect(true),angle(turn_angle),transparency(trs){
     ResourceSystem* rs=AllSystem::getInstance().getSubSystem<ResourceSystem>();
     if (rs){
         texture=rs->loadTexture(filepath);
@@ -19,16 +36,44 @@ SpriteComponent::SpriteComponent(std::string filepath,float xcut,float ycut,floa
 SpriteComponent::~SpriteComponent(){
     SDL_DestroyTexture(texture);
 }
-void SpriteComponent::setTexture(std::string filepath){
+SpriteComponent& SpriteComponent::setTexture(std::string filepath){
     ResourceSystem* rs=AllSystem::getInstance().getSubSystem<ResourceSystem>();
     if (rs){
         texture=rs->loadTexture(filepath);
     }
+    return *this;
+}
+SpriteComponent& SpriteComponent::setSrcRect(SDL_FRect rect){
+    srcrect=rect;
+    hassrcrect=true;
+    return *this;
+}
+SpriteComponent& SpriteComponent::setDstRect(SDL_FRect rect){
+    dstrect=rect;
+    hasdstrect=true;
+    return *this;
+}
+SpriteComponent& SpriteComponent::setAngle(float a){
+    angle=a;
+    return *this;
+}
+SpriteComponent& SpriteComponent::setTransparency(Uint8 trs){
+    transparency=trs;
+    return *this;
 }
 void SpriteComponent::print(){
     SDL_Renderer* r=AllSystem::getInstance().getRenderer();
     if (r){
-        SDL_RenderTexture(r,texture,&srcrect,&dstrect);
+        if (hasdstrect&&hassrcrect){
+            SDL_RenderTexture(r,texture,&srcrect,&dstrect);
+        }
+        else if (hasdstrect){
+            SDL_RenderTexture(r,texture,NULL,&dstrect);
+        }
+        else if (hassrcrect){
+            SDL_RenderTexture(r,texture,&srcrect,NULL);
+        }
+        SDL_RenderTexture(r,texture,NULL,NULL);
     }
 }
 PositionComponent::PositionComponent():position(0.0f,0.0f){}
@@ -108,11 +153,11 @@ void TextBoxComponent::print(){
     SDL_RenderTexture(r,texture,NULL,&dstrect);
 }
 ColliderComponent::ColliderComponent():colliderect({0,0,0,0}){}
-ColliderComponent::ColliderComponent(float x,float y,float w,float h):colliderect({x,y,w,h}){}
+ColliderComponent::ColliderComponent(SDL_FRect rect):colliderect(rect){}
 TransformComponent::TransformComponent(float sc):scale(sc){
     
 }
-ButtonType1Component::ButtonType1Component(std::string filepath1,std::string filepath2,float x,float y,float w,float h):dstrect({x,y,w,h}),pre_active(false),active(false){
+ButtonType1Component::ButtonType1Component(std::string filepath1,std::string filepath2,SDL_FRect rect):dstrect(rect),pre_active(false),active(false){
     ResourceSystem* rs=AllSystem::getInstance().getSubSystem<ResourceSystem>();
     if (rs){
         texture1=rs->loadTexture(filepath1);

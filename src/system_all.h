@@ -6,6 +6,7 @@
 #include <vector>
 #include <unordered_map>
 #include <iostream>
+#include <fstream>
 #include <stdexcept>
 #include <memory>
 
@@ -17,15 +18,20 @@
 #include "i_subsystem.h"
 #include "i_scene.h"
 
+enum gameState{
+    MENU_MAIN,
+    MENU_SETTING
+};
+
 class AllSystem{
     private:
     // Attributes
     std::string title="Test";
     bool running=true;
-    int screenwidth=1152;
-    int screenheight=648;
+    int screenwidth=1600;
+    int screenheight=900;
     int target_fps=60;
-    std::string state="menu_main";
+    gameState state=MENU_MAIN;
     bool isChange=true;
     SDL_Window* window=nullptr; // SDL window
     SDL_Renderer* renderer=nullptr; // SDL renderer
@@ -45,8 +51,23 @@ class AllSystem{
     // Getters
     int getScreenWidth() const {return screenwidth;}
     int getScreenHeight() const {return screenheight;}
-    std::string getState() const {return state;}
+    gameState getState() const {return state;}
     SDL_Renderer* getRenderer() const {return renderer;}
+    int getTargetFPS() const {return target_fps;}
+
+    // Setters
+    void setState(const gameState& newState){
+        state=newState;
+    }
+    bool getChange() const {
+        return isChange;
+    }
+    void toggleChange(){
+        isChange=!isChange;
+    }
+    void setChange(bool change){
+        isChange=change;
+    }
 
     // Methods
     template<typename T,typename...TArgs> void addSubSystem(TArgs&&... args){

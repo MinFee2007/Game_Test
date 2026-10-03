@@ -1,17 +1,5 @@
 #include "system_manager.h"
-ManagerSystem::ManagerSystem():isChange(true){}
-bool ManagerSystem::getChange() const {
-    return isChange;
-}
-void ManagerSystem::toggleChange(){
-    isChange=!isChange;
-}
-void ManagerSystem::init(){
-    isChange=true;
-}
-void ManagerSystem::setChange(bool change){
-    isChange=change;
-}
+void ManagerSystem::init(){}
 void ManagerSystem::update(){
     EventSystem* sys_event=AllSystem::getInstance().getSubSystem<EventSystem>();
     SceneSystem* sys_scene=AllSystem::getInstance().getSubSystem<SceneSystem>();
@@ -23,9 +11,9 @@ void ManagerSystem::update(){
         std::cout<<"Error: Unable to get event system\n";
         return;
     }
-    if (isChange){
-        isChange=false;
-        if (AllSystem::getInstance().getState()=="menu_main"){
+    if (AllSystem::getInstance().getChange()){
+        AllSystem::getInstance().setChange(false);
+        if (AllSystem::getInstance().getState()==MENU_MAIN){
             // SceneMainMenu* scene=new SceneMainMenu();
             // std::unique_ptr<IScene> sceneptr(scene); 
             // sys_scene->changeScene(std::move(sceneptr));

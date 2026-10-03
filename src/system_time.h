@@ -1,9 +1,12 @@
 #ifndef SYSTEM_TIME_H
 #define SYSTEM_TIME_H
 
+#include <string>
+#include <fstream>
 #include <SDL3/SDL.h>
 
 #include "i_subsystem.h"
+#include "system_all.h"
 
 class TimeSystem:public ISubSystem{
     private:
@@ -11,27 +14,16 @@ class TimeSystem:public ISubSystem{
     Uint64 lastTime=0; // Last record time
     float deltaTime=0.0f; // Time between two frames
     float timeScale=1.0f; // Time scale factor
+    float targetFrameTime; // Time per frame in miliseconds
     public:
-    void init() override {
-        lastTime=SDL_GetTicks(); // Record initial time
-    }
-    void update() override {
-        Uint64 currentTime=SDL_GetTicks(); // Record current time
-        deltaTime=(currentTime-lastTime)/1000.0f; // Calcute delta time in seconds
-        lastTime=currentTime; // Update last time to current time for next frame
-    }
-    void destruct() override {
-        std::cout<<"Time system is destructed\n";
-    }
+    void init() override;
+    void update() override;
+    void destruct();
     // Getters
-    float getDeltaTime() const {
-        return deltaTime*timeScale; // Return scaled delta time
-    }
-    float getUnscaledDeltaTime() const { 
-        return deltaTime; // Return unscaled delta time (for UI)
-    }
-    void setTimeScale(float scale){
-        timeScale=scale; // Set time scale factor
-    }
+    float getDeltaTime() const;
+    float getUnscaledDeltaTime() const;
+    void setTimeScale(float scale);
+    std::string getDate();
+    std::string getTime();
 };
 #endif

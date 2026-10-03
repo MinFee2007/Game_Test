@@ -10,19 +10,12 @@
 #include "system_event.h"
 #include "system_time.h"
 #include "system_resource.h"
-#include "system_gui.h"
 #include "system_scene.h"
 
 #include "o_scenes.h"
 
 class ManagerSystem:public ISubSystem{
-    private:
-    bool isChange;
     public:
-    ManagerSystem();
-    bool getChange() const;
-    void toggleChange();
-    void setChange(bool change);
     void init() override;
     void update() override;
     void destruct() override;
