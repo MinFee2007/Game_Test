@@ -1,14 +1,24 @@
 #include "system_manager.h"
-void ManagerSystem::init(){}
+void ManagerSystem::init(){
+    LogSystem* log=AllSystem::getInstance().getSubSystem<LogSystem>();
+    if (log){
+        log->write(NOTIFICATION,"Manager system is initialized successfully");
+    }
+}
 void ManagerSystem::update(){
     EventSystem* sys_event=AllSystem::getInstance().getSubSystem<EventSystem>();
     SceneSystem* sys_scene=AllSystem::getInstance().getSubSystem<SceneSystem>();
+    LogSystem* log=AllSystem::getInstance().getSubSystem<LogSystem>();
     if (!sys_scene){
-        std::cout<<"Error: Unable to get scene system\n";
+        if (log){
+            log->write(ERROR,"Unable to get scene system");
+        }
         return;
     }
     if (!sys_event){
-        std::cout<<"Error: Unable to get event system\n";
+        if (log){
+            log->write(ERROR,"Unable to get event system");
+        }
         return;
     }
     if (AllSystem::getInstance().getChange()){
@@ -18,17 +28,26 @@ void ManagerSystem::update(){
             // std::unique_ptr<IScene> sceneptr(scene); 
             // sys_scene->changeScene(std::move(sceneptr));
             sys_scene->changeScene(std::make_unique<SceneMainMenu>());
-            std::cout<<"Main menu is loaded into scene system\n";
+            if (log){
+                log->write(NOTIFICATION,"Main menu is loaded into scene system");
+            }
         }
         else {
-            std::cout<<"Error: Unknown all system's state\n";
+            if (log){
+                log->write(ERROR,"Unknown all system's state");
+            }
         }
     }
     if (sys_event->isQuit()){
         AllSystem::getInstance().quit();
-        std::cout<<"Program's closed successfully\n";
+        if (log){
+            log->write(NOTIFICATION,"Program is closed successfully");
+        }
     }
 }
 void ManagerSystem::destruct(){
-    std::cout<<"Manager system is destructed\n";
+    LogSystem* log=AllSystem::getInstance().getSubSystem<LogSystem>();
+    if (log){
+        log->write(NOTIFICATION,"Manager system is destructed");
+    }
 }

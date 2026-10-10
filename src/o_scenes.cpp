@@ -3,6 +3,7 @@ SceneMainMenu::SceneMainMenu():state("entering"){
 }
 void SceneMainMenu::enter(){
     EntityComponentSystem* ecs=AllSystem::getInstance().getSubSystem<EntityComponentSystem>();
+    LogSystem* log=AllSystem::getInstance().getSubSystem<LogSystem>();
     float screenw=static_cast<float>(AllSystem::getInstance().getScreenWidth());
     float screenh=static_cast<float>(AllSystem::getInstance().getScreenHeight());
     if (ecs){
@@ -12,10 +13,17 @@ void SceneMainMenu::enter(){
         Entity& gametitle=ecs->addEntity();
         gametitle.addComponent<TextBoxComponent>("Testing","assets/fonts/kvn-97.ttf",SDL_Color{190,190,190,255},36.0f,(screenw-910.0f)/2.0f,screenh*1/10,900.0f,10.0f);
         entities["gametitle"]=&gametitle;
-        std::cout<<"Main menu is initialized\n";
+        Entity& button1=ecs->addEntity();
+        button1.addComponent<ButtonType1Component>("assets/pictures/1x1_button.png","assets/pictures/1x1_button_pressed.png",SDL_FRect{200.0f,200.0f,200.0f,200.0f});
+        entities["button1"]=&button1;
+        if (log){
+            log->write(NOTIFICATION,"Main menu is initialized");
+        }
     }
     else {
-        std::cout<<"Error: Couldn't find entity component system\n";
+        if (log){
+            log->write(ERROR,"Main menu is unable to find entity component system");
+        }
     }
 }
 void SceneMainMenu::update(){

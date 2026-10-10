@@ -13,6 +13,7 @@
 
 #include "system_all.h"
 #include "system_event.h"
+#include "system_time.h"
 #include "system_resource.h"
 #include "system_ecs.h"
 
@@ -56,6 +57,7 @@ class VelocityComponent:public Component{
     VelocityComponent(float xdir,float ydir);
     VelocityComponent(float xdir,float ydir,float spd);
     VelocityComponent(float xdir,float ydir,float spd,float a);
+    void update() override;
 };
 class TextBoxComponent:public Component {
     public:
@@ -101,8 +103,19 @@ class ButtonType1Component:public Component{
 class MotionComponent:public Component{
     public:
     bool finished=false;
-    SDL_FRect startrect;
-    SDL_FRect endrect;
+    Vector2D position1;
+    Vector2D position2;
+    float scale1,scale2;
+    bool posChange=false;
+    bool scChange=false;
+    bool doneMotion=false;
+    MotionComponent(Vector2D pos1,Vector2D pos2,float sc1,float sc2);
+    MotionComponent(Vector2D pos1,Vector2D pos2);
+    MotionComponent(float sc1,float sc2);
+    void setNewPosition(Vector2D pos1,Vector2D pos2);
+    void setNewScale(float sc1,float sc2);
+    void init() override;
+    void update() override;
 };
 class InputComponent;
 class HealthComponent;

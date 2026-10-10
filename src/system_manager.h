@@ -6,6 +6,7 @@
 #include "i_subsystem.h"
 
 #include "system_all.h"
+#include "system_log.h"
 #include "system_ecs.h"
 #include "system_event.h"
 #include "system_time.h"

@@ -5,6 +5,8 @@
 #include <SDL3/SDL.h>
 
 #include "i_subsystem.h"
+#include "system_all.h"
+#include "system_log.h"
 
 class EventSystem:public ISubSystem{
     private:
@@ -18,57 +20,16 @@ class EventSystem:public ISubSystem{
     
     public:
     //Getters
-    const std::vector<SDL_Event>& getEvent() const {
-        return frameEvents;
-    }
-    bool isQuit() const {
-        return quitRequested;
-    }
-    bool isKeyHeld(SDL_Scancode key) const {
-        // Check if key is being held down
-        return currentKeyStates[key]!=0;
-    }
-    bool isKeyPressed(SDL_Scancode key) const {
-        // Check if key is pressed
-        return (currentKeyStates[key]!=0)&&(lastKeyStates[key]==0);
-    }
-    bool isKeyReleased(SDL_Scancode key) const {
-        // Check if key is released
-        return (currentKeyStates[key]==0)&&(lastKeyStates[key]!=0);
-    }
-    bool isAnyPressed() const {
-        // Check if any key is pressed
-        for (int keyi=0;keyi<numKeys;keyi++){
-            if ((currentKeyStates[keyi]!=0)&&(lastKeyStates[keyi]==0)){
-                return true;
-            }
-        }
-        return false;
-    }
+    const std::vector<SDL_Event>& getEvent() const; // Get all events in the current frame
+    bool isQuit() const; // Check quit event
+    bool isKeyHeld(SDL_Scancode key) const; // Check if key is being held down
+    bool isKeyPressed(SDL_Scancode key) const; // Check if key is pressed
+    bool isKeyReleased(SDL_Scancode key) const; // Check if key is released
+    bool isAnyPressed() const; // Check if any key is pressed
 
     // Methods
-    void init() override {
-        // Initialize current key states and last key states
-        currentKeyStates=SDL_GetKeyboardState(&numKeys);
-        lastKeyStates.resize(numKeys,0);
-    }
-    void update() override{
-        // Saving current key states to last key states after a frame update
-        for (int i=0;i<numKeys;++i) {
-            lastKeyStates[i]=currentKeyStates[i];
-        }
-        // Polling events
-        frameEvents.clear();
-        SDL_Event event;
-        while (SDL_PollEvent(&event)){
-            frameEvents.push_back(event);
-            if (event.type==SDL_EVENT_QUIT) {
-                quitRequested=true;
-            }
-        }
-    }
-    void destruct() override {
-        std::cout<<"Event system is destructed\n";
-    }
+    void init() override;
+    void update() override;
+    void destruct() override;
 };
 #endif

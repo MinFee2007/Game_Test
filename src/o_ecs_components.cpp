@@ -88,6 +88,32 @@ VelocityComponent::VelocityComponent(float xdir,float ydir,float spd):direction(
 VelocityComponent::VelocityComponent(float xdir,float ydir,float spd,float a):direction(xdir,ydir),velocity(spd),acceleration(a){
     direction.normalize();
 }
+void VelocityComponent::update(){
+    if (!entity->hasComponent<PositionComponent>()){
+        return;
+    }
+    if (abs(acceleration)<=0.0001f){
+        acceleration=0.0f;
+    }
+    if (abs(velocity)<=0.0001f){
+        velocity=0.0f;
+    }
+    float maxv=2*std::sqrt(std::pow(AllSystem::getInstance().getScreenWidth(),2)+std::pow(AllSystem::getInstance().getScreenHeight(),2));
+    if (abs(velocity)>maxv){
+        velocity=0.0f;
+    }
+    TimeSystem* timesys=AllSystem::getInstance().getSubSystem<TimeSystem>();
+    PositionComponent& poscomp=entity->getComponent<PositionComponent>();
+    if (timesys){
+        float dt=timesys->getDeltaTime();
+        velocity+=acceleration*dt;
+        poscomp.position+=direction*velocity*dt;
+    }
+    else {
+        velocity+=acceleration;
+        poscomp.position=direction*velocity;
+    }
+}
 TextBoxComponent::TextBoxComponent(std::string initial_text,std::string fontpath,SDL_Color color,float size,float x,float y,float w,float p):
     text(initial_text),
     font(nullptr),

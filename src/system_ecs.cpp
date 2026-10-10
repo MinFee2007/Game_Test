@@ -23,7 +23,12 @@ void Entity::delGroup(Group mGroup){
     groupbitset[mGroup]=false;
 }
 //methods of class EntityComponentSystem
-void EntityComponentSystem::init(){}
+void EntityComponentSystem::init(){
+    LogSystem* log=AllSystem::getInstance().getSubSystem<LogSystem>();
+    if (log){
+        log->write(NOTIFICATION,"Entity component system is initialized successfully");
+    }
+}
 void EntityComponentSystem::update(){
     for (auto& e:entities){
         e->update();
@@ -78,6 +83,10 @@ void EntityComponentSystem::destruct(){
     entities.clear();
     for (auto& group:groupedentities){
         group.clear();
+    }
+    LogSystem* log=AllSystem::getInstance().getSubSystem<LogSystem>();
+    if (log){
+        log->write(NOTIFICATION,"Entity component system is destructed");
     }
 }
 void Entity::addGroup(Group mGroup){

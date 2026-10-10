@@ -2,10 +2,10 @@
 #define ALLSYSTEM_H
 
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include <iostream>
 #include <fstream>
 #include <stdexcept>
 #include <memory>
@@ -107,29 +107,26 @@ class AllSystem{
 
         // Initialize SDL3 video
         if (!SDL_Init(SDL_INIT_VIDEO)){
-            std::cout<<"Error: SDL_init failed: "<<SDL_GetError()<<"\n";
+            std::cerr<<"Error: SDL_Init failed: "<<SDL_GetError()<<"\n";
         }
         // Initialize SDL3 text & font
         if (!TTF_Init()){
-            std::cout<<"TTF_Init Error: "<<SDL_GetError()<<"\n";
+            std::cerr<<"Error: TTF_Init failed: "<<SDL_GetError()<<"\n";
         }
 
         // Create a window and renderer
         SDL_CreateWindowAndRenderer(title.c_str(),screenwidth,screenheight,0,&window,&renderer);
         if (!window){
-            std::cout<<"Error: SDL_CreateWindow failed: "<<SDL_GetError()<<"\n";
+            std::cerr<<"Error: SDL_CreateWindow failed: "<<SDL_GetError()<<"\n";
         }
         if (!renderer){
-            std::cout<<"Error: SDL_CreateRenderer failed: "<<SDL_GetError()<<"\n";
+            std::cerr<<"Error: SDL_CreateRenderer failed: "<<SDL_GetError()<<"\n";
         }
 
         // Initialize subsystems
         for (auto& subsystem:subsystems){
             subsystem->init();
         }
-
-        // Notify
-        std::cout<<"All system is initialized successfully\n";
     }
 
     void update(){
@@ -159,8 +156,10 @@ class AllSystem{
 
     void destruct(){
         // Clean up resources
-        for (auto& subsystem:subsystems){
-            subsystem->destruct();
+        for (auto it=subsystems.rbegin();it!=subsystems.rend();++it){
+            if (*it){
+                (*it)->destruct();
+            }
         }
         SDL_DestroyWindow(window);
         SDL_DestroyRenderer(renderer);

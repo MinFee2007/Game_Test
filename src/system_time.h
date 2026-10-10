@@ -7,6 +7,7 @@
 
 #include "i_subsystem.h"
 #include "system_all.h"
+#include "system_log.h"
 
 class TimeSystem:public ISubSystem{
     private:
@@ -15,15 +16,15 @@ class TimeSystem:public ISubSystem{
     float deltaTime=0.0f; // Time between two frames
     float timeScale=1.0f; // Time scale factor
     float targetFrameTime; // Time per frame in miliseconds
+    SDL_DateTime dateTime; // Date and time
     public:
     void init() override;
     void update() override;
-    void destruct();
+    void destruct() override;
     // Getters
     float getDeltaTime() const;
     float getUnscaledDeltaTime() const;
     void setTimeScale(float scale);
-    std::string getDate();
-    std::string getTime();
+    SDL_DateTime getDateTime();
 };
 #endif

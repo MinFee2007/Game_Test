@@ -7,11 +7,16 @@
 #include "i_scene.h"
 
 class SceneSystem:public ISubSystem {
-private:
+    private:
     std::unique_ptr<IScene> currentScene;
     std::unique_ptr<IScene> nextScene;
-public:
-    void init() override {}
+    public:
+    void init() override {
+        LogSystem* log=AllSystem::getInstance().getSubSystem<LogSystem>();
+        if (log){
+            log->write(NOTIFICATION,"Scene system is initialized successfully");
+        }
+    }
 
     void changeScene(std::unique_ptr<IScene> newScene){
         nextScene=std::move(newScene);
@@ -24,7 +29,10 @@ public:
             }
             currentScene=std::move(nextScene);
             currentScene->enter();
-            std::cout<<"A new scene has been loaded\n";
+            LogSystem* log=AllSystem::getInstance().getSubSystem<LogSystem>();
+            if (log){
+                log->write(NOTIFICATION,"A new scene has been loaded into scene system");
+            }
         }
 
         if (currentScene){
@@ -40,7 +48,10 @@ public:
         if (currentScene){
             currentScene->exit();
         }
-        std::cout<<"Scene system is destructed\n";
+        LogSystem* log=AllSystem::getInstance().getSubSystem<LogSystem>();
+        if (log){
+            log->write(NOTIFICATION,"Scene system is destructed");
+        }
     }
 };
 #endif

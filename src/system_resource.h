@@ -12,6 +12,7 @@
 #include "i_subsystem.h"
 
 #include "system_all.h"
+#include "system_log.h"
 
 class ResourceSystem:public ISubSystem{
     private:
