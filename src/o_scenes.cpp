@@ -11,10 +11,10 @@ void SceneMainMenu::enter(){
         background.addComponent<SpriteComponent>("assets/pictures/bg_mainmenu.png",SDL_FRect{0,0,screenw,screenh},0.0f);
         entities["background"]=&background;
         Entity& gametitle=ecs->addEntity();
-        gametitle.addComponent<TextBoxComponent>("Testing","assets/fonts/kvn-97.ttf",SDL_Color{190,190,190,255},36.0f,(screenw-910.0f)/2.0f,screenh*1/10,900.0f,10.0f);
+        gametitle.addComponent<TextBoxComponent>("This might be a game","assets/fonts/Jersey10-Regular.ttf",SDL_Color{190,190,190,255},42.0f,(screenw-910.0f)/2.0f,screenh*1/10,900.0f,10.0f);
         entities["gametitle"]=&gametitle;
         Entity& button1=ecs->addEntity();
-        button1.addComponent<ButtonType1Component>("assets/pictures/1x1_button.png","assets/pictures/1x1_button_pressed.png",SDL_FRect{200.0f,200.0f,200.0f,200.0f});
+        button1.addComponent<ButtonType1Component>("assets/pictures/GUI_popup_stone.png","",SDL_FRect{AllSystem::getInstance().getScreenWidth()/2-200.0f,AllSystem::getInstance().getScreenHeight()/1.5f,400.0f,200.0f});
         entities["button1"]=&button1;
         if (log){
             log->write(NOTIFICATION,"Main menu is initialized");

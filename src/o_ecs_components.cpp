@@ -187,7 +187,7 @@ ButtonType1Component::ButtonType1Component(std::string filepath1,std::string fil
     ResourceSystem* rs=AllSystem::getInstance().getSubSystem<ResourceSystem>();
     if (rs){
         texture1=rs->loadTexture(filepath1);
-        if (filepath2!="NULL"){
+        if (filepath2!=""){
             texture2=rs->loadTexture(filepath2);
         }
         else {
