@@ -9,7 +9,6 @@
 #include "src/system_manager.h"
 
 // Log system must be added first, then time system
-
 int main(int argc, char* argv[]){
     AllSystem& allsystem=AllSystem::getInstance();
     allsystem.addSubSystem<LogSystem>();
